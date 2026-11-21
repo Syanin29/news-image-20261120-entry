@@ -171,7 +171,7 @@ def draw_map(draw, box, pal, polys, title=True):
                   fill=(255, 255, 255))
     if title:
         f_t = font("Archivo.ttf", 15)
-        label = "WHERE IT HAPPENED — 24 PLACES"
+        label = f"WHERE IT HAPPENED — {len(S.MARKERS)} PLACES"
         tw = draw.textlength(label, font=f_t)
         # paper patch behind the title so dots/markers never strike through it
         draw.rectangle([x0 + 2, y0 + 2, x0 + tw + 12, y0 + 24],

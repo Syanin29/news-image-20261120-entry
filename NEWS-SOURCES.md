@@ -93,3 +93,21 @@ renderer.
   depiction of Akvan itself.
 - Map: Natural Earth coastline data (public domain), drawn as a dotted map.
 - Fonts: Playfair Display, Archivo, Inter (OFL).
+
+## Refresh 21 November 2026 (stories 36–41, added before final submit)
+36. AI selloff: US stocks -3.7%, S&P 500 + Dow into correction — One Turn
+    world brief, 21 Nov 2026 (865 headlines scanned).
+37. Russia hits Kyiv, missiles in Poland: 400+ drones + 110 missiles
+    overnight, at least 8 killed in Kyiv, two missiles + suspected drone
+    down in Poland, PM Tusk calls it a deliberate provocation — AP via
+    TFI Online + France 24 / CBS News / El País via One Turn, 21 Nov.
+38. Cancer pill clears tumors: daraxonrasib made pancreatic cancer
+    undetectable on scans in 1 in 12 trial patients — One Turn (London),
+    21 Nov.
+39. Gen Z protests: 25 countries across Europe — One Turn (Berlin),
+    21 Nov.
+40. COP31 runs past deadline: Antalya talks into overtime, nearly 200
+    nations fail to agree on fossil fuels — One Turn, 21 Nov.
+41. Iran downs US MQ-9: IRGC says drone over Strait of Hormuz was the
+    58th American-made MQ-9 brought down — Standard Topic World Archive,
+    21 Nov.

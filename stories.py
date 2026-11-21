@@ -13,7 +13,7 @@ Layout of each record:
 """
 
 DATE_LINE = "FRIDAY, 20 NOVEMBER 2026"
-STORY_COUNT = 35
+STORY_COUNT = 41
 CONTINENT_LINE = "6 CONTINENTS"
 
 HERO = (
@@ -83,6 +83,12 @@ LIST_STORIES = [
     ("INDIA-ISRAEL DEFENCE DEAL", "RS 1,976 CR", 24),
     ("THOMAS MARKLE RULED COMPETENT", "FLORIDA COURT", 4),
     ("BOKS & ALL BLACKS RACE TO FINAL", "FINAL NOV 29", 8),
+    ("AI SELLOFF: STOCKS -3.7%", "CORRECTION", 3),
+    ("RUSSIA HITS KYIV, MISSILES IN POLAND", "400+ DRONES", 25),
+    ("CANCER PILL CLEARS TUMORS", "1 IN 12", 8),
+    ("GEN Z PROTESTS: 25 COUNTRIES", "EUROPE-WIDE", 26),
+    ("COP31 RUNS PAST DEADLINE", "FOSSIL FUELS", 27),
+    ("IRAN DOWNS US MQ-9 DRONE", "58TH CLAIMED", 28),
 ]
 
 TICKER = [
@@ -118,4 +124,8 @@ MARKERS = {
     22: (125.8, 39.8, -12, 12),  # Yongbyon — enrichment
     23: (139.7, 35.7, 8, 12),    # Tokyo — Hayabusa2
     24: (77.2, 28.6, -8, -14),   # New Delhi — Modi / defence deal
+    25: (30.5, 50.4, -16, -12),  # Kyiv — Russia strikes / Poland missiles
+    26: (13.4, 52.5, 14, -10),   # Berlin — Gen Z protests
+    27: (30.7, 36.9, 8, 14),     # Antalya — COP31 overtime
+    28: (56.5, 26.5, 10, 12),    # Strait of Hormuz — MQ-9 downed
 }
