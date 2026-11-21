@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
-"""news-image-20261120 entrypoint.
+"""Entrypoint for the news-image-20261120 entry.
 
-Writes the pre-rendered front page (entry.png, 1024x1024, 35 verified
-stories from Friday 20 November 2026) into the output directory.
+The front page image (entry.png, 1024x1024) is rendered ahead of time by
+render.py from the verified story data in stories.py. This script is the
+piece the competition harness runs: it checks the PNG is intact and copies
+it into the output directory. Standard library only, so it runs anywhere
+python3 does.
 
-Stdlib only — the sandbox installs nothing, so no Pillow is needed here.
-The image was rendered at build time by render.py (PIL) from the verified
-facts in stories.py / NEWS-SOURCES.md, the photos in assets/, and Natural
-Earth coastline data (ne_110m_land.geojson). Running render.py again
-reproduces entry.png byte-for-byte (deterministic: fixed seed, no
-timestamps).
-
-Before writing, the PNG is validated: magic signature, IHDR dimensions
-(1024x1024), size within the 1 MiB cap, and a trailing IEND chunk, so a
-corrupt or truncated file fails loudly instead of shipping a broken image.
+Checks before copying:
+  - file size within the 1 MiB cap
+  - PNG magic signature at the start
+  - IHDR chunk reporting exactly 1024x1024
+  - IEND chunk at the end (no truncation)
+Any failure aborts with a message instead of shipping a broken image.
 """
 
 import os
@@ -21,48 +20,37 @@ import struct
 import sys
 
 PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
-EXPECTED_WIDTH = 1024
-EXPECTED_HEIGHT = 1024
-MAX_BYTES = 1024 * 1024  # 1 MiB cap
+WANT_W = 1024
+WANT_H = 1024
+SIZE_CAP = 1024 * 1024
 
 
-def load_png(path):
-    with open(path, "rb") as handle:
-        data = handle.read()
-    if len(data) > MAX_BYTES:
-        raise SystemExit(
-            f"entry.png is {len(data)} bytes, over the 1 MiB cap"
-        )
-    if not data.startswith(PNG_MAGIC):
-        raise SystemExit("entry.png: bad PNG signature")
-    # IHDR: 8 magic + 4 length + 4 type + 13 data (width, height, ...).
-    if len(data) < 33 or data[12:16] != b"IHDR":
-        raise SystemExit("entry.png: missing IHDR chunk")
-    width, height = struct.unpack(">II", data[16:24])
-    if (width, height) != (EXPECTED_WIDTH, EXPECTED_HEIGHT):
-        raise SystemExit(
-            f"entry.png is {width}x{height}, expected "
-            f"{EXPECTED_WIDTH}x{EXPECTED_HEIGHT}"
-        )
-    # The last 8 bytes must hold the IEND chunk type plus its CRC.
-    tail = data.rstrip(b"\x00")
-    if len(tail) < 8 or tail[-8:-4] != b"IEND":
-        raise SystemExit("entry.png: missing IEND chunk")
-    return data
+def read_checked_png(path):
+    with open(path, "rb") as fh:
+        blob = fh.read()
+    if len(blob) > SIZE_CAP:
+        raise SystemExit(f"entry.png is {len(blob)} bytes, cap is {SIZE_CAP}")
+    if blob[:8] != PNG_MAGIC:
+        raise SystemExit("entry.png does not start with the PNG signature")
+    if len(blob) < 33 or blob[12:16] != b"IHDR":
+        raise SystemExit("entry.png is missing its IHDR chunk")
+    width, height = struct.unpack(">II", blob[16:24])
+    if (width, height) != (WANT_W, WANT_H):
+        raise SystemExit(f"entry.png is {width}x{height}, want {WANT_W}x{WANT_H}")
+    if blob.rstrip(b"\x00")[-8:-4] != b"IEND":
+        raise SystemExit("entry.png has no IEND chunk (truncated?)")
+    return blob
 
 
 def main():
-    here = os.path.dirname(os.path.abspath(__file__))
+    base = os.path.dirname(os.path.abspath(__file__))
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "output")
     os.makedirs(out_dir, exist_ok=True)
-    data = load_png(os.path.join(here, "entry.png"))
-    target = os.path.join(out_dir, "entry.png")
-    with open(target, "wb") as handle:
-        handle.write(data)
-    print(
-        f"wrote {target} ({len(data)} bytes, "
-        f"{EXPECTED_WIDTH}x{EXPECTED_HEIGHT})"
-    )
+    png = read_checked_png(os.path.join(base, "entry.png"))
+    dest = os.path.join(out_dir, "entry.png")
+    with open(dest, "wb") as fh:
+        fh.write(png)
+    print(f"wrote {dest} ({len(png)} bytes, {WANT_W}x{WANT_H}, checks passed)")
 
 
 if __name__ == "__main__":
